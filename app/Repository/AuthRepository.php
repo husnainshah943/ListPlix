@@ -1,15 +1,15 @@
 <?php
-namespace App\Repository\MobileApi;
+namespace App\Repository;
 
 use App\Models\User;
-use App\Repository\MobileApi\IAuthRepository;
+use App\Repository\Interfaces\AuthInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
-class AuthRepository implements IAuthRepository
+class AuthRepository implements AuthInterface
 {
-
+    //Login For Mobile
     public function login(array $attributes)
     {
 
@@ -36,7 +36,33 @@ class AuthRepository implements IAuthRepository
             return 'Email is not registered';
         }
     }
+    //Login for Web
+    public function web_login(array $attributes)
+    {
 
+        $data = [
+            'email' => data_get($attributes, 'email'),
+            'password' => data_get($attributes, 'password'),
+        ];
+
+        $user = User::where('email', data_get($attributes, 'email'))->get();
+
+        if (data_get($attributes, 'email') == 'admin@gmail.com') {
+            if (count($user) > 0) {
+                $user = User::find($user[0]['id']);
+                if (auth()->attempt($data)) {
+                    $token = auth()->user()->createToken('ListPlix')->accessToken;
+                    return $token;
+                } else {
+                    return 'Password is incorrect.';
+                }
+            } else {
+                return 'Email is not registered';
+            }
+        } else {
+            return 'Email is incorrect';
+        }
+    }
     public function register(array $attributes)
     {
         $email = data_get($attributes, 'email');
