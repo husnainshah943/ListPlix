@@ -6,6 +6,7 @@ use App\Models\ProjectDetails;
 use App\Models\task_list;
 use App\Models\User;
 use App\Repository\Interfaces\TaskListInterface;
+use function GuzzleHttp\Promise\task;
 
 class TaskListRepository implements TaskListInterface
 {
@@ -32,5 +33,9 @@ class TaskListRepository implements TaskListInterface
             return $task;
         }
     }
-
+    public function get_task($id)
+    {
+       $result = task_list::where('project_id', $id)->get();
+       return $result;
+    }
 }

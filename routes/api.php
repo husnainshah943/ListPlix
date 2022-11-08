@@ -36,6 +36,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('edit_project/{id}', [\App\Http\Controllers\api\ProjectController::class, 'edit_project']);
     Route::put('update_project', [\App\Http\Controllers\api\ProjectController::class, 'update_project']);
     Route::delete('delete_project/{id}', [\App\Http\Controllers\api\ProjectController::class, 'delete_project']);
+    Route::get('project_tasks/{id}', [\App\Http\Controllers\api\TaskListController::class, 'get_task']);
     Route::get('logout', [AuthController::class, 'logout']);
 });
 
