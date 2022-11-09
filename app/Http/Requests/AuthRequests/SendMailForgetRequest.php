@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\AuthRequests;
 
+use App\Http\Requests\BaseRequest;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\JsonResponse;
 
-class UpdateProjectRequests extends FormRequest
+class SendMailForgetRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +26,7 @@ class UpdateProjectRequests extends FormRequest
     public function rules()
     {
         return [
-            'project_title' => 'required|string|max:80|unique:project_details',
-            'project_description' => 'required|string|max:120',
-            'project_id' => 'required|integer',
+            'email' => 'required|email|max:30',
         ];
     }
 }

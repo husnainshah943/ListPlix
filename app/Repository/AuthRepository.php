@@ -9,81 +9,53 @@ use Illuminate\Support\Facades\Mail;
 
 class AuthRepository implements AuthInterface
 {
-    //Login For Mobile
     public function login(array $attributes)
     {
-
+        $error = [];
         $data = [
-            'email' => data_get($attributes, 'email'),
-            'password' => data_get($attributes, 'password'),
+            'email' => $attributes['email'],
+            'password' => $attributes['password'],
         ];
-
-        $user = User::where('email', data_get($attributes, 'email'))->get();
+        $user = User::where('email',$attributes['email'])->get();
 
         if (count($user) > 0) {
             $user = User::find($user[0]['id']);
             if ($user->verify_code != 'ok') {
-                return 'Email is not verified';
+                $error = ['error' => 'Email is not verified'];
             } else {
                 if (auth()->attempt($data)) {
                     $token = auth()->user()->createToken('ListPlix')->accessToken;
-                    return $token;
+                    return 'Bearer '.$token;
                 } else {
-                    return 'Password is incorrect.';
+                    $error = ['error' => 'Password is incorrect.'];
                 }
             }
         } else {
-            return 'Email is not registered';
+            $error = ['error' => 'Email is not registered'];
         }
+        return $error;
     }
-    //Login for Web
-    public function web_login(array $attributes)
-    {
 
-        $data = [
-            'email' => data_get($attributes, 'email'),
-            'password' => data_get($attributes, 'password'),
-        ];
-
-        $user = User::where('email', data_get($attributes, 'email'))->get();
-
-        if (data_get($attributes, 'email') == 'admin@gmail.com') {
-            if (count($user) > 0) {
-                $user = User::find($user[0]['id']);
-                if (auth()->attempt($data)) {
-                    $token = auth()->user()->createToken('ListPlix')->accessToken;
-                    return $token;
-                } else {
-                    return 'Password is incorrect.';
-                }
-            } else {
-                return 'Email is not registered';
-            }
-        } else {
-            return 'Email is incorrect';
-        }
-    }
     public function register(array $attributes)
     {
-        $email = data_get($attributes, 'email');
+        $email = $attributes['email'];
         $code = $this->send_mail(['email' => $email]);
         $user = User::create([
-            'name' => data_get($attributes, 'name'),
-            'email' => data_get($attributes, 'email'),
-            'password' => Hash::make(data_get($attributes, 'password')),
-            'role' => data_get($attributes, 'role'),
-            'department' => data_get($attributes, 'department'),
+            'name' => $attributes['name'],
+            'email' => $attributes['email'],
+            'password' => Hash::make($attributes['password']),
+            'role' => $attributes['role'],
+            'department' => $attributes['department'],
             'verify_code' => $code,
         ]);
-        $token = $user->createToken('ListPlix')->accessToken;
-        return [$token, $code];
+        return $code;
     }
 
     public function send_mail($attributes)
     {
         $verify_code = mt_rand(1000, 9999);
         $send_mail_details['verify_code'] = $verify_code;
-        $send_mail_details['to'] = data_get($attributes, 'email');
+        $send_mail_details['to'] = $attributes['email'];
         $send_mail_details['title'] = "Email Verification";
         $send_mail_details['body'] = "Please verify your email using this code: ";
 
@@ -104,12 +76,12 @@ class AuthRepository implements AuthInterface
     }
     public function verify_mail(array $attributes)
     {
-        $user = User::where('email', data_get($attributes, 'email'))->get();
+        $user = User::where('email', $attributes['email'])->get();
 
         if (count($user) > 0) {
             $user = User::find($user[0]['id']);
             $db_code = $user->verify_code;
-            if ($db_code == data_get($attributes, 'verify_code')) {
+            if ($db_code == $attributes['verify_code']) {
                 $user->verify_code = "ok";
                 $user->email_verified_at = now()->toDateTimeString();
                 $user->save();
@@ -121,11 +93,11 @@ class AuthRepository implements AuthInterface
     }
     public function forget_password(array $attributes)
     {
-        $user = User::where('email', data_get($attributes, 'email'))->get();
+        $user = User::where('email', $attributes['email'])->get();
         if (count($user) > 0) {
             $verify_code = mt_rand(1000, 9999);
             $send_mail_details['verify_code'] = $verify_code;
-            $send_mail_details['to'] = data_get($attributes, 'email');
+            $send_mail_details['to'] = $attributes['email'];
             $send_mail_details['title'] = "Forget Password";
             $send_mail_details['body'] = "Please enter this code to change password. : ";
 
@@ -141,10 +113,10 @@ class AuthRepository implements AuthInterface
     }
     public function update_password(array $attributes)
     {
-        $user = User::where('email', data_get($attributes, 'email'))->get();
+        $user = User::where('email', $attributes['email'])->get();
         if (count($user) > 0) {
             $user = User::find($user[0]['id']);
-            $user->password = Hash::make(data_get($attributes, 'password'));
+            $user->password = Hash::make($attributes['password']);
             $user->save();
             return true;
         } else {

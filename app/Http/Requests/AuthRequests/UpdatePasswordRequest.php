@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\AuthRequests;
 
+use App\Http\Requests\BaseRequest;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 
-class Verify_MailRequests extends FormRequest
+class UpdatePasswordRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,14 +27,7 @@ class Verify_MailRequests extends FormRequest
     {
         return [
             'email' => 'required|email|max:50',
-            'verify_code' => 'required|max:4',
+            'password' => 'required|min:8|max:16',
         ];
-    }
-    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
-    {
-        $response = new JsonResponse([
-            'errors' => $validator->errors()], 401);
-
-        throw new \Illuminate\Validation\ValidationException($validator, $response);
     }
 }
