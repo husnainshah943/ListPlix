@@ -3,10 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-<<<<<<< HEAD
-=======
 use Laravel\Passport\Passport;
->>>>>>> e8082a1 (ListPlix Completed - RestApis)
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -27,12 +24,6 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-<<<<<<< HEAD
-
-        //
-    }
-}
-=======
         Passport::tokensCan([
             'admin' => 'For Admin',
             'user' => 'For User',
@@ -40,4 +31,3 @@ class AuthServiceProvider extends ServiceProvider
         //
     }
 }
->>>>>>> e8082a1 (ListPlix Completed - RestApis)
