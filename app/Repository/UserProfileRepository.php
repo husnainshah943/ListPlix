@@ -2,6 +2,7 @@
 namespace App\Repository;
 
 use App\Models\User;
+use App\Repository\Interfaces\ContactUsInterface;
 use App\Repository\Interfaces\UserProfileInterface;
 
 class UserProfileRepository implements UserProfileInterface
@@ -9,12 +10,13 @@ class UserProfileRepository implements UserProfileInterface
 
     public function all_users()
     {
-        $user = User::all();
-        return $user;
+        $response = User::all();
+        return $response;
     }
     public function user_info()
     {
-        $user = auth()->user();
-        return $user;
+        $response = auth()->user();
+        return $response;
     }
+
 }

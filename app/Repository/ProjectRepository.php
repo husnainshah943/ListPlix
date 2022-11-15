@@ -2,15 +2,16 @@
 
 namespace App\Repository;
 
-use App\Models\assign_to;
+use App\Models\assignTo;
 use App\Models\ProjectDetails;
-use App\Models\task_list;
+use App\Models\taskList;
 use App\Models\User;
 use App\Repository\Interfaces\ProjectInterface;
 
 class ProjectRepository implements ProjectInterface
 {
-    public function add_project(array $attributes)
+    private $error,$message;
+    public function add_project($attributes)
     {
         $project = new ProjectDetails();
         $project->project_title = $attributes['project_title'];
@@ -19,7 +20,7 @@ class ProjectRepository implements ProjectInterface
 
         $get_id = ProjectDetails::where('project_title', $attributes['project_title'])->get();
         $check = $get_id[0]['id'];
-        $assign = new assign_to();
+        $assign = new assignTo();
         $assign->project_id = $check;
         $assign->user_id = $attributes['user_id'];;
         $result = $assign->save();
@@ -35,9 +36,9 @@ class ProjectRepository implements ProjectInterface
         $project = ProjectDetails::find($id);
         return $project;
     }
-    public function project_by_id($id)
+    public function project_by_userid($id)
     {
-        $project = assign_to::where('user_id',$id)->get();
+        $project = AssignTo::where('user_id',$id)->get();
         if (count($project) > 0) {
             $arr = array();
             for($i=0;isset($project[$i]['project_id']);$i++){
@@ -59,7 +60,7 @@ class ProjectRepository implements ProjectInterface
             return false;
         }
     }
-    public function update_project(array $attributes)
+    public function update_project($attributes)
     {
         $project = $this->find_project($attributes['project_id']);
         if($project) {
@@ -73,8 +74,8 @@ class ProjectRepository implements ProjectInterface
     }
     public function delete_project($id)
     {
-        $result = task_list::where('project_id', $id)->delete();
-        $result = assign_to::where('project_id', $id)->delete();
+        $result = TaskList::where('project_id', $id)->delete();
+        $result = AssignTo::where('project_id', $id)->delete();
         $result = ProjectDetails::where('id', $id)->delete();
 
         return $result;

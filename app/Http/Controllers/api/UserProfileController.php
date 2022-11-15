@@ -15,16 +15,16 @@ class UserProfileController extends Controller
 
     public function all_users()
     {
-        $user = $this->user_repository->all_users();
-        if ($user != null) {
-            return response()->json(['user' => $user], 200);
+        $response = $this->user_repository->all_users();
+        if ($response != null) {
+            return response()->json(['user' => $response], 200);
         } else {
             return response()->json(['error' => 'User not found.'], 401);
         }
     }
     public function user_info()
     {
-        $user = auth()->user();
-        return response()->json(['user' => $user], 200);
+        $response =$this->user_repository->user_info();
+        return response()->json(['user' => $response], 200);
     }
 }
