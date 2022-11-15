@@ -16,15 +16,23 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
+<<<<<<< HEAD
 //MobileApi
 Route::post('login', [AuthController::class, 'login']);
 Route::post('web_login', [AuthController::class, 'web_login']);
+=======
+/*
+ * Mobile Api
+ */
+Route::post('login', [AuthController::class, 'login']);
+>>>>>>> e8082a1 (ListPlix Completed - RestApis)
 Route::post('register', [AuthController::class, 'register']);
 Route::post('verify', [AuthController::class, 'verify_mail']);
 Route::post('resend', [AuthController::class, 'send_mail']);
 Route::post('forget_password', [AuthController::class, 'forget_password']);
 Route::post('update_password', [AuthController::class, 'update_password']);
 
+<<<<<<< HEAD
 Route::middleware('auth:api')->group(function () {
     Route::get('all_users_info', [UserProfileController::class, 'all_users']);
     Route::get('get_user_info', [UserProfileController::class, 'user_info']);
@@ -32,12 +40,31 @@ Route::middleware('auth:api')->group(function () {
     Route::get('all_projects', [\App\Http\Controllers\api\ProjectController::class, 'all_projects']);
     Route::post('project_by_id', [\App\Http\Controllers\api\ProjectController::class, 'project_by_id']);
     Route::post('get_task_by_id', [\App\Http\Controllers\api\TaskListController::class, 'get_task_by_id']);
+=======
+Route::post('contact_us', [\App\Http\Controllers\api\ContactUsController::class, 'contact_us']);
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('get_user_info', [UserProfileController::class, 'user_info']);
+    Route::post('project_by_userid', [\App\Http\Controllers\api\ProjectController::class, 'project_by_userid']);
+    Route::post('get_project_tasks_by_userid', [\App\Http\Controllers\api\TaskListController::class, 'get_project_tasks_by_userid']);
+    Route::post('update_task_status', [\App\Http\Controllers\api\TaskListController::class, 'update_task_status']);
+    Route::get('logout', [AuthController::class, 'logout']);
+});
+
+Route::middleware(['auth:api','isAdmin'])->group(function (){
+    Route::get('all_users_info', [UserProfileController::class, 'all_users']);
+    Route::get('all_projects', [\App\Http\Controllers\api\ProjectController::class, 'all_projects']);
+    Route::post('add_project', [\App\Http\Controllers\api\ProjectController::class, 'add_project']);
+>>>>>>> e8082a1 (ListPlix Completed - RestApis)
     Route::post('add_task', [\App\Http\Controllers\api\TaskListController::class, 'add_task']);
     Route::get('edit_project/{id}', [\App\Http\Controllers\api\ProjectController::class, 'edit_project']);
     Route::put('update_project', [\App\Http\Controllers\api\ProjectController::class, 'update_project']);
     Route::delete('delete_project/{id}', [\App\Http\Controllers\api\ProjectController::class, 'delete_project']);
     Route::get('project_tasks/{id}', [\App\Http\Controllers\api\TaskListController::class, 'get_task']);
+<<<<<<< HEAD
     Route::get('logout', [AuthController::class, 'logout']);
+=======
+>>>>>>> e8082a1 (ListPlix Completed - RestApis)
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

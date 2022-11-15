@@ -46,6 +46,10 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
+<<<<<<< HEAD
+=======
+
+>>>>>>> e8082a1 (ListPlix Completed - RestApis)
         });
     }
 
